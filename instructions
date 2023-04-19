@@ -1,5 +1,6 @@
 1. Create database test
 2. Run database migrations
 3. Seed user and website database tables
+4. post creation done through postman passing  website_id of any seeded website, title and description
 4. user subscription is done via postman using the already seeded users and websites,
 5. email sending through "php artisan emails:send"
