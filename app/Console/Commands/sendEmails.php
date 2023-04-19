@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 Use App\Models\Post;
+use App\Jobs\NewPostEmailJob;
 
 class sendEmails extends Command
 {
@@ -32,16 +33,14 @@ class sendEmails extends Command
         foreach($newposts as $newpost){
             $subscribers = $newpost->website->subscribers;
                 foreach($subscribers as $subscriber){
-                    Mail::send('emails.new-post', $newpost, function ($message) {
-                        $message->from('msukwamose1@gmail.com');
-                        $message->to($subscriber->email)->subject('New Post');
-                    });
+                    NewPostEmailJob::dispatch($subscriber, $newpost);
                 }
+                
+                $post = Post::find($newpost->id);
+                $post->status = 2;
+                $post->save();
             }
 
-           $post = Post::find($newpost->id);
-           $post->status = 2;
-           $post->save();
         }
     
 }

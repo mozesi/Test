@@ -12,13 +12,16 @@ use Illuminate\Queue\SerializesModels;
 class NewPostEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    
+    protected $subscriber;
+    protected $post;
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct($subscriber, $post)
     {
-        //
+        $this -> post = $post;
+        $this -> subscriber = $subscriber;
     }
 
     /**
@@ -26,6 +29,6 @@ class NewPostEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        Mail::to($this->subscriber->email)->send(new PostEmail($this->post));
     }
 }
